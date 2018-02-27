@@ -62,6 +62,8 @@ function getUnexpectedStateShapeWarningMessage(
   }
 }
 
+// helper function to check that a reducer function returns a default
+// object when it's called
 function assertReducerShape(reducers) {
   Object.keys(reducers).forEach(key => {
     const reducer = reducers[key]
@@ -118,15 +120,17 @@ function assertReducerShape(reducers) {
 export default function combineReducers(reducers) {
   const reducerKeys = Object.keys(reducers)
   const finalReducers = {}
+  // iterate through each reducer by key
   for (let i = 0; i < reducerKeys.length; i++) {
     const key = reducerKeys[i]
-
+    // warn the developer if a reducer isn't passed in
     if (process.env.NODE_ENV !== 'production') {
       if (typeof reducers[key] === 'undefined') {
+        // see warning(), throws an error just incase
         warning(`No reducer provided for key "${key}"`)
       }
     }
-
+    // as long as it's a function, add it to the new reducers object
     if (typeof reducers[key] === 'function') {
       finalReducers[key] = reducers[key]
     }
